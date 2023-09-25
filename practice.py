@@ -8,7 +8,8 @@ def hash_password(password):
     print("Hashed password ", hash.decode())
     return hash.decode()
 
-hashed_password = hash_password("password")
+hashed_password = hash_password("admin")
+print(hashed_password)
 
 def hash_verify(password,  hashed_password):
     bytes = password.encode('utf-8')
@@ -16,4 +17,4 @@ def hash_verify(password,  hashed_password):
     print(result)
     return result
 
-hash_verify("password",hashed_password)
+# hash_verify("password",hashed_password)

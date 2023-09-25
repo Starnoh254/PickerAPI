@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from flask import request 
+from flask import request  
 import pymysql
 
 from functions import *
@@ -104,7 +104,6 @@ SELECT * FROM tbldriver WHERE Email=%s ;
             else :
                 result_set = cursor.fetchone()
 
-
                 result_set["JoiningDate"] = str(result_set["JoiningDate"])
 
                 # Return the modified result_set as a JSON response
@@ -112,3 +111,90 @@ SELECT * FROM tbldriver WHERE Email=%s ;
 
         except Exception as error:
             print(str(error))
+
+
+class PickerPayment(Resource):
+    def post(self):
+        json = request.json
+        phone = json['phone']
+        amount = json['amount']
+
+        try: 
+            response = mpesa_payment(amount , phone)
+            print(response)
+            return response 
+        except Exception as e:
+            print(str(e))
+
+
+class UpdateDetails(Resource):
+    def post(self):
+        json = request.json
+        driverId = json['driverId']
+        county = json['county']
+        constituency = json['constituency']
+        mobileNumber = json['mobileNumber']
+        email = json['email']
+        address = json['address']
+        password = json['password']
+     
+
+
+        # create a database connection 
+
+        
+        connection = pymysql.connect(
+            host = 'localhost',
+            user = 'root',
+            password = '',
+            database = "garbagemsdb"
+
+        )
+        cursor = connection.cursor(pymysql.cursors.DictCursor)
+
+        sql = '''UPDATE tbldriver 
+        SET County = %s,Constituency = %s , MobileNumber = %s ,
+          Email = %s , Address = %s , Password = %s
+          WHERE ID = %s
+          '''
+        value = (county, constituency , mobileNumber, email , address, password, driverId)
+
+        try:
+            cursor.execute(sql , value)
+            connection.commit()
+            count = cursor.rowcount
+            if count == 0:
+                return {'message ': "Error in Updating"}
+            else:
+                return {'message' : 'Profile successfully updated'}
+        except Exception as error:
+            print(str(error))
+
+
+class CheckNotification(Resource):
+    def get(self):
+        sql = 'SELECT * FROM tblnotifications'
+        connection = pymysql.connect(
+            host = 'localhost',
+            user = 'root',
+            password = '',
+            database = "garbagemsdb"
+
+        )
+        cursor = connection.cursor(pymysql.cursors.DictCursor)
+        try:
+            cursor.execute(sql)
+            count = cursor.rowcount
+            if count == 0:
+                return {'message ': "No notifications"}
+            else:
+                notifications = cursor.fetchall()
+                for notification in notifications:
+                    notification['time'] = str(notification['time'])
+                    
+                return notifications
+        except Exception as e:
+            print(str(e))
+
+
+        
