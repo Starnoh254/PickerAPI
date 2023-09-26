@@ -20,7 +20,7 @@ class ManagerLogin(Resource):
             database = "garbagemsdb"
                         )
         
-        cursor = connection.cursor(cursor.DictCursor)
+        cursor = connection.cursor(pymysql.cursors.DictCursor)
 
         try:
             cursor.execute(sql , data)
