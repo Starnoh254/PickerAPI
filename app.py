@@ -9,7 +9,7 @@ api = Api(app)
 from views.superAdmin import ManagerSignUp , SuperAdminLogin , SendNotificationsToPickers , UpdateSuperAdminDetails
 from views.superAdmin import ViewAllManagers , RemoveManager , ViewWastePickers , SendNotificationsToManagers
 from views.user import PickerSignUp , PickerLogin , PickerPayment , UpdateDetails , CheckNotification
-
+from views.manager import ManagerLogin
 # configure urls for user 
 api.add_resource(PickerSignUp , '/api/signup_new_picker')
 api.add_resource(PickerLogin , '/api/picker_login')
@@ -21,7 +21,7 @@ api.add_resource(SendNotificationsToManagers , '/api/send_notifications_to_manag
 
 
 # configure urls for manager
-
+api.add_resource(ManagerLogin , '/api/manager_login')
 
 # configure urls for super Admin
 api.add_resource(ManagerSignUp , '/api/signup_new_manager')
